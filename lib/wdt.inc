@@ -3,7 +3,7 @@ WDT_FXNS	    CODE
 
 WatchdogPeriodInit
 	movlw 			b'00011100'
-	BANKSEL	    WDTCON
+	BANKSEL	    	WDTCON
 	movwf	    	WDTCON
 			; Watchdog Timer now set to reset MCU
 			; after a 16s idle (with no CLRWDT instruction)
