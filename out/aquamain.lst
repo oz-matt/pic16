@@ -1,0 +1,511 @@
+gplink-1.4.0 #1107 (May 18 2015)
+Copyright (c) 1998-2014 gputils project
+Listing File Generated: 2-17-2016  17:14:32
+ 
+ 
+Address  Value    Disassembly              Source
+-------  -----    -----------              ------
+                                           #include "p16lf1937.inc"
+                                                   LIST
+                                           
+                                           ;==========================================================================
+                                           ;  MPASM PIC16LF1937 processor include
+                                           ; 
+                                           ;  (c) Copyright 1999-2014 Microchip Technology, All rights reserved
+                                           ;==========================================================================
+                                           
+                                                   NOLIST
+                                           #include "delay.inc"
+                                           
+                                           DELAY_FXNS    CODE
+                                           
+                                           DELAYMS
+000093   0020     movlb   0x00               BANKSEL	    MSTMR
+                                           NUMMS
+000094   3002     movlw   0x02               movlw	      H'02'
+000095   00a0     movwf   0x20               movwf       MSTMR
+                                           NEXTMS
+000096   0ba0     decfsz  0x20, 0x1          decfsz      MSTMR,1
+000097   2896     goto    0x0096             goto        NEXTMS
+000098   0ba1     decfsz  0x21, 0x1          decfsz      MSLEFT,1
+000099   2894     goto    0x0094             goto        NUMMS
+00009a   0008     return                     return
+                                           
+                                           DELAY100MS
+                                           NEXTHUN
+00009b   0020     movlb   0x00               BANKSEL	    MSLEFT
+00009c   3051     movlw   0x51               movlw	      H'51'
+00009d   00a1     movwf   0x21               movwf	      MSLEFT
+00009e   2093     call    0x0093             call        DELAYMS
+00009f   0ba2     decfsz  0x22, 0x1          decfsz      MS100LEFT,1
+0000a0   289b     goto    0x009b             goto        NEXTHUN
+0000a1   0008     return                     return
+                                           
+                                           DOUBLEBLINKLED
+0000a2   0020     movlb   0x00               BANKSEL	    PORTE
+0000a3   3002     movlw   0x02               movlw	      b'00000010'
+0000a4   0090     movwf   0x10               movwf	      PORTE			      ; Set pin RE1 low
+                                           
+0000a5   0020     movlb   0x00               BANKSEL	    MS100LEFT
+0000a6   3001     movlw   0x01               movlw	      H'01'
+0000a7   00a2     movwf   0x22               movwf	      MS100LEFT			  ; Put 255 (FF) into MSLEFT and then
+0000a8   209b     call    0x009b             call	      DELAY100MS			; call DELAYMS. This will block for 255ms.
+                                           
+0000a9   0020     movlb   0x00               BANKSEL	    PORTE
+0000aa   3000     movlw   0x00               movlw	      b'00000000'
+0000ab   0090     movwf   0x10               movwf	      PORTE			      ; Set pin RE1 high
+                                           
+0000ac   0020     movlb   0x00               BANKSEL	    MS100LEFT
+0000ad   3001     movlw   0x01               movlw	      H'01'
+0000ae   00a2     movwf   0x22               movwf	      MS100LEFT			  ; Put 255 (FF) into MSLEFT and then
+0000af   209b     call    0x009b             call        DELAY100MS			; call DELAYMS. This will block for 255ms.
+                                           SINGLEBLINKLED
+0000b0   0020     movlb   0x00               BANKSEL	    PORTE
+0000b1   3002     movlw   0x02               movlw	      b'00000010'
+0000b2   0090     movwf   0x10               movwf	      PORTE			      ; Set pin RE1 low
+                                           
+0000b3   0020     movlb   0x00               BANKSEL	    MS100LEFT
+0000b4   3001     movlw   0x01               movlw	      H'01'
+0000b5   00a2     movwf   0x22               movwf	      MS100LEFT			  ; Put 255 (FF) into MSLEFT and then
+0000b6   209b     call    0x009b             call        DELAY100MS			; call DELAYMS. This will block for 255ms.
+                                           
+0000b7   0020     movlb   0x00               BANKSEL	    PORTE
+0000b8   3000     movlw   0x00               movlw	      b'00000000'
+0000b9   0090     movwf   0x10               movwf	      PORTE			      ; Set pin RE1 high
+                                           
+0000ba   0008     return                     return
+                                           #include "udata.inc"
+                                           
+                                           AQUA_UDATA                    UDATA
+                                           MSTMR                         RES		1   ; Free register address where MSTMR value is stored
+                                           MSLEFT                        RES		1   ; Free register address where MSLEFT value is stored
+                                           MS100LEFT                     RES		1   ; Free register address where MS100LEFT value is stored
+                                           
+                                           NEXT_UART_CHAR_BEFORE_ADJ	    RES		1
+                                           NEXT_UART_CHAR                RES		1
+                                           
+                                           NEXT_I2C_ADDRESS		          RES		1   ; Register where we are storing the next address in the am1805 that we want to write to
+                                           NEXT_I2C_DATA			            RES		1   ; Register where we are storing the next byte of data that we want to send to the above address
+                                           
+                                           NEXT_AM1805_VAL			          RES		1
+                                           
+                                           LATEST_I2C_BYTE			          RES		1
+                                           
+                                           TENS_CTR                      RES		1
+                                           ONES_CTR                      RES		1
+                                           HUNS_CTR                      RES		1
+                                           
+                                           MATH_X				                RES		1
+                                           MATH_Y				                RES		1
+                                           MATH_RESULT			              RES		1
+                                           
+                                           NEXT_CTDWN_VAL                RES		1
+                                           PRINT_REGISTER                RES		1
+                                           
+                                           FOUT_CTR                      RES		1
+                                           
+                                           TEST_CTR                      RES		1
+                                           
+                                           SLEEP_REG			                RES		1
+                                           
+                                           SLEEP_INTERVALS_LEFT		      RES		1   ; EEPROM address 0x00
+                                           SLEEP_INTERVAL_DURATION		    RES		1   ; EEPROM address 0x01
+                                           SLEEP_INTERVAL_FINAL		      RES		1   ; EEPROM address 0x02
+                                           PICALWAYSON_BIT               RES		1   ; EEPROM address 0x03
+                                           
+                                           NEXT_MASK			                RES		1
+                                           
+                                           CT_WORK                       RES		1
+                                           CT_WORK_TENS                  RES		1
+                                           
+                                           CT_SEC                        RES		1
+                                           CT_MIN				                RES		1
+                                           CT_HR                         RES		1
+                                           CT_DAY				                RES		1
+                                           CT_MO                         RES		1
+                                           CT_YR                         RES		1
+                                           #include "io.inc"
+                                           
+                                           IO_FXNS		CODE
+                                           
+                                           SetupConfig
+                                           	; CONFIG1
+                                           	; __config 0x37F4
+                                           	 __CONFIG _CONFIG1, _FOSC_INTOSC & _WDTE_NSLEEP & _PWRTE_OFF & _MCLRE_ON & _CP_OFF & _CPD_OFF & _BOREN_ON & _CLKOUTEN_ON & _IESO_ON & _FCMEN_ON
+                                           	; CONFIG2
+                                           	; __config 0xFFFF
+                                           	__CONFIG _CONFIG2, _WRT_OFF & _PLLEN_ON & _STVREN_ON & _BORV_LO & _LVP_ON
+                                           
+0000bb   0008     return                       return
+                                           
+                                           SetupIntOsc
+0000bc   0021     movlb   0x01               BANKSEL			OSCCON
+0000bd   3000     movlw   0x00               movlw				b'00000000'
+0000be   0099     movwf   0x19               movwf				OSCCON				; Set Internal Oscillator frequency to 31khz
+                                           
+0000bf   0008     return                     return
+                                           
+                                           SetupIO
+0000c0   0021     movlb   0x01               BANKSEL			TRISE
+0000c1   3000     movlw   0x00               movlw				b'00000000'
+0000c2   0090     movwf   0x10               movwf				TRISE					; Set pins RE0-RE3 as digital outputs
+                                           
+0000c3   0021     movlb   0x01               BANKSEL			TRISA
+0000c4   3003     movlw   0x03               movlw				b'00000011'
+0000c5   008c     movwf   0x0c               movwf				TRISA					; Set pin RA1 as digital input
+                                           
+0000c6   0023     movlb   0x03               BANKSEL			ANSELA
+0000c7   3001     movlw   0x01               movlw				b'00000001'		; Configure RA0 as analog input, the rest are
+0000c8   008c     movwf   0x0c               movwf				ANSELA				; digital I/O.
+                                           
+0000c9   0008     return                     return
+                                           
+                                           SetupFOUTCtr
+0000ca   0020     movlb   0x00               BANKSEL			FOUT_CTR
+0000cb   3064     movlw   0x64               movlw				H'64'
+0000cc   00b1     movwf   0x31               movwf				FOUT_CTR
+0000cd   0008     return                     return
+                                           
+                                           SetupFVRC
+                                           
+0000ce   0022     movlb   0x02               BANKSEL			CM1CON0
+0000cf   3096     movlw   0x96               movlw				b'10010110'
+0000d0   0091     movwf   0x11               movwf				CM1CON0
+                                           				; Enable comparator, inverting, fast speed,
+                                           				; hysteresis enabled (45mV), asynchronous mode,
+                                           				; comparison level is 1.024V
+                                           
+0000d1   0022     movlb   0x02               BANKSEL			CM1CON1
+0000d2   3020     movlw   0x20               movlw				b'00100000'
+0000d3   0092     movwf   0x12               movwf				CM1CON1
+                                           				; No interrupt generated by comparator, pos input
+                                           				; set to FVR, neg input set to C12IN0- (RA0)
+                                           
+0000d4   0022     movlb   0x02               BANKSEL			FVRCON
+0000d5   30c4     movlw   0xc4               movlw				b'11000100'
+0000d6   0097     movwf   0x17               movwf				FVRCON
+                                           
+0000d7   1f17     btfss   0x17, 0x6          btfss				FVRCON,FVRRDY		; Wait until the FVR can be used
+0000d8   28d7     goto    0x00d7             goto				$-1
+                                           
+0000d9   0008     return                     return
+                                           
+                                           PullPSWLow
+0000da   0020     movlb   0x00               BANKSEL			PORTA
+0000db   150c     bsf     0x0c, 0x2          bsf					PORTA,2
+0000dc   0000     nop                        nop
+0000dd   0008     return                     return
+                                           
+                                           RELEASE_PSW
+0000de   0020     movlb   0x00               BANKSEL			PORTA
+0000df   110c     bcf     0x0c, 0x2          bcf					PORTA,2
+0000e0   0000     nop                        nop
+0000e1   0008     return                     return
+                                           #include "wdt.inc"
+                                           
+                                           WDT_FXNS	    CODE
+                                           
+                                           WatchdogPeriodInit
+000105   301c     movlw   0x1c             	movlw 			b'00011100'
+000106   0021     movlb   0x01             	BANKSEL	    WDTCON
+000107   0097     movwf   0x17             	movwf	    	WDTCON
+                                           			; Watchdog Timer now set to reset MCU
+                                           			; after a 16s idle (with no CLRWDT instruction)
+000108   0008     return                   	return
+                                           
+                                           WDTest
+000109   1a03     btfsc   0x03, 0x4        	btfsc	    	STATUS,NOT_TO    	; if we have a regular power reset, led blinks once
+00010a   20a2     call    0x00a2           	call	    	DOUBLEBLINKLED  	; if we have a wdt reset, it blinks twice
+00010b   20b0     call    0x00b0           	call	    	SINGLEBLINKLED
+00010c   0008     return                   	return
+                                           #include "i2c.inc"
+                                           
+                                           I2C_FXNS    CODE
+                                           
+                                           I2CINIT
+000001   3000     movlw   0x00             	movlw				H'00'
+000002   0024     movlb   0x04             	BANKSEL			SSPADD
+000003   0092     movwf   0x12             	movwf				SSPADD	    ; configure I2C SCL for 31kHz/4 = 7.75kHz
+                                           
+000004   3028     movlw   0x28             	movlw				b'00101000'
+000005   0024     movlb   0x04             	BANKSEL			SSPCON1
+000006   0095     movwf   0x15             	movwf				SSPCON1	    ; configure for Master I2C
+                                           
+000007   3000     movlw   0x00             	movlw				H'00'
+000008   0024     movlb   0x04             	BANKSEL			SSPSTAT
+000009   0094     movwf   0x14             	movwf				SSPSTAT	    ; 'enable slew rate'
+                                           
+00000a   3018     movlw   0x18             	movlw				b'00011000'
+00000b   0021     movlb   0x01             	BANKSEL			TRISC
+00000c   048e     iorwf   0x0e, 0x1        	iorwf				TRISC,f	    ; configure SDA and SCL as outputs (RC3 and RC4)
+00000d   0008     return                   	return
+                                           
+                                           I2C_SEND_START
+00000e   0024     movlb   0x04               BANKSEL			SSPCON2
+00000f   1416     bsf     0x16, 0x0          bsf					SSPCON2,SEN ; Initiate I2C Start
+                                           
+000010   1816     btfsc   0x16, 0x0          btfsc				SSPCON2,SEN
+000011   2810     goto    0x0010             goto				$-1
+000012   0008     return                     return
+                                           
+                                           I2C_SEND_STOP
+000013   0024     movlb   0x04               BANKSEL			SSPCON2
+000014   1516     bsf     0x16, 0x2          bsf					SSPCON2,PEN
+000015   1916     btfsc   0x16, 0x2          btfsc				SSPCON2,PEN
+000016   2815     goto    0x0015             goto				$-1
+000017   0008     return                     return
+                                           
+                                           I2C_TEST_WRITE
+000018   0024     movlb   0x04               BANKSEL			SSPBUF
+000019   307a     movlw   0x7a               movlw				H'7A'
+00001a   0091     movwf   0x11               movwf				SSPBUF
+00001b   0024     movlb   0x04               BANKSEL			SSPSTAT
+00001c   1914     btfsc   0x14, 0x2          btfsc				SSPSTAT,R_NOT_W		; Wait until transmit is not in progress
+00001d   281c     goto    0x001c             goto				$-1
+00001e   0008     return                     return
+                                           
+                                           I2C_WAIT_FOR_ACK
+00001f   1b16     btfsc   0x16, 0x6          btfsc				SSPCON2,ACKSTAT
+000020   281f     goto    0x001f             goto				$-1
+000021   0008     return                     return
+                                           
+                                           I2C_GEN_READ
+000022   0024     movlb   0x04               BANKSEL			SSPCON2
+000023   1596     bsf     0x16, 0x3          bsf					SSPCON2,RCEN
+000024   1996     btfsc   0x16, 0x3          btfsc				SSPCON2,RCEN
+000025   2824     goto    0x0024             goto				$-1
+000026   0008     return                     return
+                                           
+                                           I2C_GET_READ_DATA
+000027   0024     movlb   0x04               BANKSEL	    SSPBUF
+000028   0811     movf    0x11, 0x0          movf	    	SSPBUF,w
+000029   0020     movlb   0x00               BANKSEL	    LATEST_I2C_BYTE
+00002a   00a8     movwf   0x28               movwf	    	LATEST_I2C_BYTE
+00002b   0008     return                     return
+                                           
+                                           
+                                           I2C_TEST_GET_READ_DATA
+00002c   0024     movlb   0x04               BANKSEL	    SSPBUF
+00002d   0811     movf    0x11, 0x0          movf	    	SSPBUF,w
+00002e   0023     movlb   0x03               BANKSEL	    TXREG
+00002f   009a     movwf   0x1a               movwf	    	TXREG	    ; Transmit the read byte over EUSART
+000030   0020     movlb   0x00               BANKSEL	    PIR1
+000031   1a11     btfsc   0x11, 0x4          btfsc	    	PIR1,TXIF
+000032   2831     goto    0x0031             goto	    	$-1
+000033   0008     return                     return
+                                           
+                                           I2C_WRITE_NEXT_DATA
+000034   0020     movlb   0x00             	BANKSEL			NEXT_I2C_DATA
+000035   0826     movf    0x26, 0x0        	movf				NEXT_I2C_DATA,w
+000036   0024     movlb   0x04             	BANKSEL			SSPBUF
+000037   0091     movwf   0x11             	movwf				SSPBUF
+000038   0024     movlb   0x04             	BANKSEL			SSPSTAT
+000039   1914     btfsc   0x14, 0x2        	btfsc				SSPSTAT,R_NOT_W		; Wait until transmit is not in progress
+00003a   2839     goto    0x0039           	goto				$-1
+00003b   0008     return                   	return
+                                           
+                                           I2C_WRITE_NEXT_ADDRESS
+00003c   0020     movlb   0x00               BANKSEL			NEXT_I2C_ADDRESS
+00003d   0825     movf    0x25, 0x0          movf				NEXT_I2C_ADDRESS,w
+00003e   0024     movlb   0x04               BANKSEL			SSPBUF
+00003f   0091     movwf   0x11               movwf				SSPBUF
+000040   0024     movlb   0x04               BANKSEL			SSPSTAT
+000041   1914     btfsc   0x14, 0x2          btfsc				SSPSTAT,R_NOT_W		; Wait until transmit is not in progress
+000042   2841     goto    0x0041             goto				$-1
+000043   0008     return                     return
+                                           
+                                           I2C_SEND_ACK
+000044   0024     movlb   0x04               BANKSEL			SSPCON2
+000045   1296     bcf     0x16, 0x5          bcf					SSPCON2, ACKDT
+000046   0000     nop                        nop
+000047   0000     nop                        nop
+000048   1616     bsf     0x16, 0x4          bsf					SSPCON2, ACKEN
+000049   0008     return                     return
+                                           
+                                           I2C_SEND_NACK
+00004a   0024     movlb   0x04               BANKSEL			SSPCON2
+00004b   1696     bsf     0x16, 0x5          bsf					SSPCON2, ACKDT
+00004c   0000     nop                        nop
+00004d   0000     nop                        nop
+00004e   1616     bsf     0x16, 0x4          bsf					SSPCON2, ACKEN
+00004f   0008     return                     return
+                                           #include "macro.inc"
+                                           PIC_INIT     macro
+                                           
+0000f8   20bb     call    0x00bb             call      SetupConfig
+0000f9   20bc     call    0x00bc             call      SetupIntOsc
+0000fa   20c0     call    0x00c0             call      SetupIO
+0000fb   20ce     call    0x00ce             call      SetupFVRC
+                                           
+0000fc   2105     call    0x0105             call      WatchdogPeriodInit
+                                                       ; Watchdog Timer will now reset the PIC
+                                                       ; when it idles for 16s without a CLRWDT
+                                                       ; instruction
+                                           
+0000fd   2001     call    0x0001             call      I2CINIT
+                                                       ; Setup I2C SDA and SCL on RC4 and RC3 at 7.75kHz
+                                                       ; Setup EUSART at 150 baud.
+                                                       ; Datasheet says to run this before enabling timer
+                                           
+                                             endm
+                                           #include "ichex.inc"
+                                           ICHEX_FXNS          CODE
+                                           
+                                           IS_THIS_FIRST_PWRUP
+                                           
+                                             ; This function returns a 0 in w if this powerup is NOT the first powerup
+                                             ; and a 1 in w if it IS the first powerup.
+                                           
+0000e2   300f     movlw   0x0f               movlw				H'0F'
+0000e3   0020     movlb   0x00               BANKSEL			NEXT_I2C_ADDRESS
+0000e4   00a5     movwf   0x25               movwf				NEXT_I2C_ADDRESS
+                                           
+0000e5   200e     call    0x000e             call				I2C_SEND_START
+0000e6   2057     call    0x0057             call				I2C_SEND_EEPROM_WRITE
+0000e7   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+0000e8   203c     call    0x003c             call				I2C_WRITE_NEXT_ADDRESS
+0000e9   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+                                           
+0000ea   200e     call    0x000e             call				I2C_SEND_START
+0000eb   2050     call    0x0050             call				I2C_SEND_EEPROM_READ
+0000ec   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+0000ed   2022     call    0x0022             call				I2C_GEN_READ
+0000ee   2027     call    0x0027             call				I2C_GET_READ_DATA
+0000ef   204a     call    0x004a             call				I2C_SEND_NACK
+                                           
+0000f0   2013     call    0x0013             call				I2C_SEND_STOP
+                                           
+0000f1   0020     movlb   0x00               BANKSEL			LATEST_I2C_BYTE
+0000f2   3001     movlw   0x01               movlw       .1
+0000f3   02a8     subwf   0x28, 0x1          subwf       LATEST_I2C_BYTE,f
+0000f4   08a8     movf    0x28, 0x1          tstf				LATEST_I2C_BYTE
+                                           
+0000f5   1d03     btfss   0x03, 0x2          btfss				STATUS,Z
+0000f6   3401     retlw   0x01               retlw				.1
+0000f7   3400     retlw   0x00               retlw				.0
+                                           #include "eeprom.inc"
+                                           
+                                           EEPROM_FXNS   CODE
+                                           
+                                           EEPROM_WRITE_ADDRESS					equ	H'A0'
+                                           EEPROM_READ_ADDRESS						equ	H'A1'
+                                           
+                                           EEPROM_ADDRESS_OF_SLEEP_VARS	equ	H'00'
+                                           
+                                           I2C_SEND_EEPROM_READ
+000050   0024     movlb   0x04               BANKSEL			SSPBUF
+000051   30a1     movlw   0xa1               movlw				EEPROM_READ_ADDRESS	; Read '0xD3' into W
+000052   0091     movwf   0x11               movwf				SSPBUF
+000053   0024     movlb   0x04               BANKSEL			SSPSTAT
+000054   1914     btfsc   0x14, 0x2          btfsc				SSPSTAT,R_NOT_W		; Wait until transmit is not in progress
+000055   2854     goto    0x0054             goto				$-1
+000056   0008     return                     return
+                                           
+                                           I2C_SEND_EEPROM_WRITE
+000057   0024     movlb   0x04               BANKSEL			SSPBUF
+000058   30a0     movlw   0xa0               movlw				EEPROM_WRITE_ADDRESS	; Read '0xD2' into W
+000059   0091     movwf   0x11               movwf				SSPBUF
+00005a   0024     movlb   0x04               BANKSEL			SSPSTAT
+00005b   1914     btfsc   0x14, 0x2          btfsc				SSPSTAT,R_NOT_W		; Wait until transmit is not in progress
+00005c   285b     goto    0x005b             goto				$-1
+00005d   0008     return                     return			; If WDT doesn't timeout, transmission was successful
+                                           
+                                           I2C_EEPROM_WRITE_DATA_TO_ADDRESS
+00005e   200e     call    0x000e             call				I2C_SEND_START
+00005f   2057     call    0x0057             call				I2C_SEND_EEPROM_WRITE
+000060   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+000061   203c     call    0x003c             call				I2C_WRITE_NEXT_ADDRESS
+000062   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+000063   2034     call    0x0034             call				I2C_WRITE_NEXT_DATA
+000064   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+000065   2013     call    0x0013             call				I2C_SEND_STOP
+000066   0008     return                     return
+                                           
+                                           I2C_EEPROM_READ_SLEEP_VARS
+000067   200e     call    0x000e             call				I2C_SEND_START
+000068   2057     call    0x0057             call				I2C_SEND_EEPROM_WRITE
+000069   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+                                           
+00006a   3000     movlw   0x00               movlw				H'00'
+00006b   0020     movlb   0x00               BANKSEL			NEXT_I2C_ADDRESS
+00006c   00a5     movwf   0x25               movwf				NEXT_I2C_ADDRESS
+                                           
+00006d   203c     call    0x003c             call				I2C_WRITE_NEXT_ADDRESS
+00006e   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+                                           
+00006f   200e     call    0x000e             call				I2C_SEND_START
+000070   2050     call    0x0050             call				I2C_SEND_EEPROM_READ
+000071   201f     call    0x001f             call				I2C_WAIT_FOR_ACK
+000072   2022     call    0x0022             call				I2C_GEN_READ
+000073   2027     call    0x0027             call				I2C_GET_READ_DATA
+000074   2044     call    0x0044             call				I2C_SEND_ACK
+                                           
+000075   0020     movlb   0x00               BANKSEL			LATEST_I2C_BYTE
+000076   0828     movf    0x28, 0x0          movf				LATEST_I2C_BYTE,w
+000077   0020     movlb   0x00               BANKSEL			SLEEP_INTERVALS_LEFT
+000078   00b4     movwf   0x34               movwf				SLEEP_INTERVALS_LEFT
+                                           
+000079   2022     call    0x0022             call				I2C_GEN_READ
+00007a   2027     call    0x0027             call				I2C_GET_READ_DATA
+00007b   2044     call    0x0044             call				I2C_SEND_ACK
+                                           
+00007c   0020     movlb   0x00               BANKSEL			LATEST_I2C_BYTE
+00007d   0828     movf    0x28, 0x0          movf				LATEST_I2C_BYTE,w
+00007e   0020     movlb   0x00               BANKSEL			SLEEP_INTERVAL_DURATION
+00007f   00b5     movwf   0x35               movwf				SLEEP_INTERVAL_DURATION
+                                           
+000080   2022     call    0x0022             call				I2C_GEN_READ
+000081   2027     call    0x0027             call				I2C_GET_READ_DATA
+000082   204a     call    0x004a             call				I2C_SEND_NACK
+                                           
+000083   0020     movlb   0x00               BANKSEL			LATEST_I2C_BYTE
+000084   0828     movf    0x28, 0x0          movf				LATEST_I2C_BYTE,w
+000085   0020     movlb   0x00               BANKSEL			SLEEP_INTERVAL_FINAL
+000086   00b6     movwf   0x36               movwf				SLEEP_INTERVAL_FINAL
+                                           
+000087   2013     call    0x0013             call				I2C_SEND_STOP
+000088   0008     return                     return
+                                           
+                                           I2C_EEPROM_DEC_NUM_INTERVALS ; Sleep vars must be updated first
+000089   3001     movlw   0x01               movlw				.1
+00008a   0020     movlb   0x00               BANKSEL			SLEEP_INTERVALS_LEFT
+00008b   0234     subwf   0x34, 0x0          subwf				SLEEP_INTERVALS_LEFT,w
+00008c   0020     movlb   0x00               BANKSEL			NEXT_I2C_DATA
+00008d   00a6     movwf   0x26               movwf				NEXT_I2C_DATA
+                                           
+00008e   0020     movlb   0x00               BANKSEL	NEXT_I2C_ADDRESS
+00008f   3000     movlw   0x00               movlw				H'00'
+000090   00a5     movwf   0x25               movwf				NEXT_I2C_ADDRESS
+                                           
+000091   205e     call    0x005e             call				I2C_EEPROM_WRITE_DATA_TO_ADDRESS
+000092   0008     return                     return
+                                           #include "brex.inc"
+                                           BREX_FXNS     CODE
+                                           
+                                           FIRST_PWRUP_CODE
+                                           
+                                           
+                                           
+00010d   0008     return                     return
+                                           
+                                           RES_VECT      CODE    0x0000
+000000   28f8     goto    0x00f8             goto        START
+                                           
+                                           ; TODO ADD INTERRUPTS HERE IF USED
+                                           
+                                           MAIN_PROG CODE
+                                           
+                                           START
+                                           
+                                             PIC_INIT                          ; Initialize clock, I/O, analog input, WDT, I2C
+                                           
+0000fe   20e2     call    0x00e2             call        IS_THIS_FIRST_PWRUP   ; 1 in w = first powerup, 0 in w = not first powerup
+0000ff   3800     iorlw   0x00               iorlw       .0                    ; Update Z bit in status flag
+000100   1d03     btfss   0x03, 0x2          btfss       STATUS,Z
+000101   210d     call    0x010d             call        FIRST_PWRUP_CODE
+                                           
+000102   20a2     call    0x00a2           	call        DOUBLEBLINKLED
+000103   0064     clrwdt                     clrwdt
+000104   2902     goto    0x0102           	goto	      $-2
+                                           
+                                           	END

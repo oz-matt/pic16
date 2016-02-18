@@ -1,0 +1,1288 @@
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  1
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00001 #include <inc/p16lf1937.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Dec 08 2015
+                      00005 ;  MPASM PIC16LF1937 processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2015 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      01540         LIST
+                      00002 #include <lib/delay.inc>
+                      00001    
+                      00002 DELAY_FXNS  CODE
+                      00003 
+0000                  00004 DELAYMS
+0000   00??           00005             BANKSEL     MSTMR
+0001   3002           00006 NUMMS:      MOVLW       H'02'
+0002   00??           00007             MOVWF       MSTMR
+0003   0B??           00008 NEXTMS:     DECFSZ      MSTMR,1
+0004   2???           00009             GOTO        NEXTMS
+0005   0B??           00010             DECFSZ      MSLEFT,1
+0006   2???           00011             GOTO        NUMMS
+0007   0008           00012             RETURN
+                      00013             
+0008                  00014 DELAY100MS
+0008                  00015 NEXTHUN:
+0008   00??           00016             BANKSEL     MSLEFT
+0009   3051           00017             MOVLW       H'51'
+000A   00??           00018             MOVWF       MSLEFT
+000B   2???           00019             CALL        DELAYMS
+000C   0B??           00020             DECFSZ      MS100LEFT,1
+000D   2???           00021             GOTO        NEXTHUN
+000E   0008           00022             RETURN
+                      00023             
+000F                  00024 DOUBLEBLINKLED
+000F   0020           00025             BANKSEL     PORTE
+0010   3002           00026             MOVLW       b'00000010'
+0011   0090           00027             MOVWF       PORTE                   ; Set pin RE1 low
+                      00028             
+0012   00??           00029             BANKSEL     MS100LEFT                       ;
+0013   3001           00030             MOVLW       H'01'                   ;
+0014   00??           00031             MOVWF       MS100LEFT                       ; Put 255 (FF) into MSLEFT and then
+0015   2???           00032             CALL        DELAY100MS                      ; call DELAYMS. This will block for 255ms.
+                      00033             
+0016   0020           00034             BANKSEL     PORTE
+0017   3000           00035             MOVLW       b'00000000'
+0018   0090           00036             MOVWF       PORTE                   ; Set pin RE1 high
+                      00037             
+0019   00??           00038             BANKSEL     MS100LEFT                       ;
+001A   3001           00039             MOVLW       H'01'                   ;
+001B   00??           00040             MOVWF       MS100LEFT                       ; Put 255 (FF) into MSLEFT and then
+001C   2???           00041             CALL        DELAY100MS                      ; call DELAYMS. This will block for 255ms.
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  2
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+001D                  00042 SINGLEBLINKLED      
+001D   0020           00043             BANKSEL     PORTE
+001E   3002           00044             MOVLW       b'00000010'
+001F   0090           00045             MOVWF       PORTE                   ; Set pin RE1 low
+                      00046             
+0020   00??           00047             BANKSEL     MS100LEFT                       ;
+0021   3001           00048             MOVLW       H'01'                   ;
+0022   00??           00049             MOVWF       MS100LEFT                       ; Put 255 (FF) into MSLEFT and then
+0023   2???           00050             CALL        DELAY100MS                      ; call DELAYMS. This will block for 255ms.
+                      00051             
+0024   0020           00052             BANKSEL     PORTE
+0025   3000           00053             MOVLW       b'00000000'
+0026   0090           00054             MOVWF       PORTE                   ; Set pin RE1 high
+                      00055             
+0027   0008           00056             RETURN
+                      00003 #include <lib/udata.inc>
+                      00001 
+                      00002 AQUA_UDATA                      UDATA
+0000                  00003 MSTMR                           RES             1   ; Free register address where MSTMR value is stored
+0001                  00004 MSLEFT                          RES             1   ; Free register address where MSLEFT value is stored
+0002                  00005 MS100LEFT                       RES             1   ; Free register address where MS100LEFT value is sto
+                            red
+                      00006 
+0003                  00007 NEXT_UART_CHAR_BEFORE_ADJ       RES             1
+0004                  00008 NEXT_UART_CHAR                  RES             1
+                      00009 
+0005                  00010 NEXT_I2C_ADDRESS                RES             1   ; Register where we are storing the next address in 
+                            the am1805 that we want to write to
+0006                  00011 NEXT_I2C_DATA                   RES             1   ; Register where we are storing the next byte of dat
+                            a that we want to send to the above address
+                      00012 
+0007                  00013 NEXT_AM1805_VAL                 RES             1
+                      00014 
+0008                  00015 LATEST_I2C_BYTE                 RES             1
+                      00016 
+0009                  00017 TENS_CTR                        RES             1
+000A                  00018 ONES_CTR                        RES             1
+000B                  00019 HUNS_CTR                        RES             1
+                      00020 
+000C                  00021 MATH_X                          RES             1
+000D                  00022 MATH_Y                          RES             1
+000E                  00023 MATH_RESULT                     RES             1
+                      00024 
+000F                  00025 NEXT_CTDWN_VAL                  RES             1
+0010                  00026 PRINT_REGISTER                  RES             1
+                      00027 
+0011                  00028 FOUT_CTR                        RES             1
+                      00029 
+0012                  00030 TEST_CTR                        RES             1
+                      00031 
+0013                  00032 SLEEP_REG                       RES             1
+                      00033 
+0014                  00034 SLEEP_INTERVALS_LEFT            RES             1   ; EEPROM address 0x00
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  3
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0015                  00035 SLEEP_INTERVAL_DURATION         RES             1   ; EEPROM address 0x01
+0016                  00036 SLEEP_INTERVAL_FINAL            RES             1   ; EEPROM address 0x02
+0017                  00037 PICALWAYSON_BIT                 RES             1   ; EEPROM address 0x03
+                      00038 
+0018                  00039 NEXT_MASK                       RES             1
+                      00040 
+0019                  00041 CT_WORK                         RES             1
+001A                  00042 CT_WORK_TENS                    RES             1
+                      00043 
+001B                  00044 CT_SEC                          RES             1
+001C                  00045 CT_MIN                          RES             1
+001D                  00046 CT_HR                           RES             1
+001E                  00047 CT_DAY                          RES             1
+001F                  00048 CT_MO                           RES             1
+0020                  00049 CT_YR                           RES             1
+                      00004 
+                      00005 RES_VECT  CODE    0x0000                                ; processor reset vector
+0000   2???           00006     GOTO    START                                       ; go to beginning of program
+                      00007 
+                      00008 ; TODO ADD INTERRUPTS HERE IF USED
+                      00009 
+                      00010 MAIN_PROG CODE                                          ; let linker place main program
+                      00011 
+0000                  00012 START
+                      00013 
+0000   2???           00014         call    DOUBLEBLINKLED
+0001   2???           00015         goto    $-1
+                      00016 
+                      00017         END
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE
+
+ABDEN                             00000000
+ABDOVF                            00000007
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ACKTIM                            00000007
+ADCON0                            0000009D
+ADCON1                            0000009E
+ADCS0                             00000004
+ADCS1                             00000005
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADFVR0                            00000000
+ADFVR1                            00000001
+ADGO                              00000001
+ADIE                              00000006
+ADIF                              00000006
+ADNREF                            00000002
+ADON                              00000000
+ADPREF0                           00000000
+ADPREF1                           00000001
+ADRES                             0000009B
+ADRESH                            0000009C
+ADRESL                            0000009B
+AHEN                              00000001
+ANSA0                             00000000
+ANSA1                             00000001
+ANSA2                             00000002
+ANSA3                             00000003
+ANSA4                             00000004
+ANSA5                             00000005
+ANSB0                             00000000
+ANSB1                             00000001
+ANSB2                             00000002
+ANSB3                             00000003
+ANSB4                             00000004
+ANSB5                             00000005
+ANSD0                             00000000
+ANSD1                             00000001
+ANSD2                             00000002
+ANSD3                             00000003
+ANSD4                             00000004
+ANSD5                             00000005
+ANSD6                             00000006
+ANSD7                             00000007
+ANSE0                             00000000
+ANSE1                             00000001
+ANSE2                             00000002
+ANSELA                            0000018C
+ANSELB                            0000018D
+ANSELD                            0000018F
+ANSELE                            00000190
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+APFCON                            0000011D
+BAUDCON                           0000019F
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BIASMD                            00000006
+BOEN                              00000004
+BORCON                            00000116
+BORRDY                            00000000
+BRG16                             00000003
+BRGH                              00000002
+BSR                               00000008
+BSR0                              00000000
+BSR1                              00000001
+BSR2                              00000002
+BSR3                              00000003
+BSR4                              00000004
+BSR_SHAD                          00000FE6
+C                                 00000000
+C1HYS                             00000001
+C1IE                              00000005
+C1IF                              00000005
+C1INTN                            00000006
+C1INTP                            00000007
+C1NCH0                            00000000
+C1NCH1                            00000001
+C1OE                              00000005
+C1ON                              00000007
+C1OUT                             00000006
+C1PCH0                            00000004
+C1PCH1                            00000005
+C1POL                             00000004
+C1SP                              00000002
+C1SYNC                            00000000
+C1TSEL0                           00000000
+C1TSEL1                           00000001
+C2HYS                             00000001
+C2IE                              00000006
+C2IF                              00000006
+C2INTN                            00000006
+C2INTP                            00000007
+C2NCH0                            00000000
+C2NCH1                            00000001
+C2OE                              00000005
+C2ON                              00000007
+C2OUT                             00000006
+C2OUTSEL                          00000002
+C2PCH0                            00000004
+C2PCH1                            00000005
+C2POL                             00000004
+C2SP                              00000002
+C2SYNC                            00000000
+C2TSEL0                           00000002
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+C2TSEL1                           00000003
+C3TSEL0                           00000004
+C3TSEL1                           00000005
+C4TSEL0                           00000006
+C4TSEL1                           00000007
+C5TSEL0                           00000000
+C5TSEL1                           00000001
+CCP1AS                            00000295
+CCP1AS0                           00000004
+CCP1AS1                           00000005
+CCP1AS2                           00000006
+CCP1ASE                           00000007
+CCP1CON                           00000293
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP2AS                            0000029C
+CCP2AS0                           00000004
+CCP2AS1                           00000005
+CCP2AS2                           00000006
+CCP2ASE                           00000007
+CCP2CON                           0000029A
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2SEL                           00000000
+CCP3AS                            00000315
+CCP3AS0                           00000004
+CCP3AS1                           00000005
+CCP3AS2                           00000006
+CCP3ASE                           00000007
+CCP3CON                           00000313
+CCP3IE                            00000004
+CCP3IF                            00000004
+CCP3M0                            00000000
+CCP3M1                            00000001
+CCP3M2                            00000002
+CCP3M3                            00000003
+CCP3SEL                           00000006
+CCP4CON                           0000031A
+CCP4IE                            00000005
+CCP4IF                            00000005
+CCP4M0                            00000000
+CCP4M1                            00000001
+CCP4M2                            00000002
+CCP4M3                            00000003
+CCP5CON                           0000031E
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCP5IE                            00000006
+CCP5IF                            00000006
+CCP5M0                            00000000
+CCP5M1                            00000001
+CCP5M2                            00000002
+CCP5M3                            00000003
+CCPR1                             00000291
+CCPR1H                            00000292
+CCPR1L                            00000291
+CCPR2                             00000298
+CCPR2H                            00000299
+CCPR2L                            00000298
+CCPR3                             00000311
+CCPR3H                            00000312
+CCPR3L                            00000311
+CCPR4                             00000318
+CCPR4H                            00000319
+CCPR4L                            00000318
+CCPR5                             0000031C
+CCPR5H                            0000031D
+CCPR5L                            0000031C
+CCPTMRS0                          0000029E
+CCPTMRS1                          0000029F
+CDAFVR0                           00000002
+CDAFVR1                           00000003
+CFGS                              00000006
+CHS0                              00000002
+CHS1                              00000003
+CHS2                              00000004
+CHS3                              00000005
+CHS4                              00000006
+CKE                               00000006
+CKP                               00000004
+CM1CON0                           00000111
+CM1CON1                           00000112
+CM2CON0                           00000113
+CM2CON1                           00000114
+CMOUT                             00000115
+CPSCH0                            00000000
+CPSCH1                            00000001
+CPSCH2                            00000002
+CPSCH3                            00000003
+CPSCON0                           0000001E
+CPSCON1                           0000001F
+CPSON                             00000007
+CPSOUT                            00000001
+CPSRNG0                           00000002
+CPSRNG1                           00000003
+CREN                              00000004
+CS0                               00000002
+CS1                               00000003
+CSRC                              00000007
+CT_DAY                            0000001E
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CT_HR                             0000001D
+CT_MIN                            0000001C
+CT_MO                             0000001F
+CT_SEC                            0000001B
+CT_WORK                           00000019
+CT_WORK_TENS                      0000001A
+CT_YR                             00000020
+C_SHAD                            00000000
+DACCON0                           00000118
+DACCON1                           00000119
+DACEN                             00000007
+DACLPS                            00000006
+DACNSS                            00000000
+DACOE                             00000005
+DACPSS0                           00000002
+DACPSS1                           00000003
+DACR0                             00000000
+DACR1                             00000001
+DACR2                             00000002
+DACR3                             00000003
+DACR4                             00000004
+DC                                00000001
+DC1B0                             00000004
+DC1B1                             00000005
+DC2B0                             00000004
+DC2B1                             00000005
+DC3B0                             00000004
+DC3B1                             00000005
+DC4B0                             00000004
+DC4B1                             00000005
+DC5B0                             00000004
+DC5B1                             00000005
+DC_SHAD                           00000001
+DELAY100MS                        00000008
+DELAYMS                           00000000
+DHEN                              00000000
+DOUBLEBLINKLED                    0000000F
+D_NOT_A                           00000005
+ECCP1AS                           00000295
+ECCP2AS                           0000029C
+ECCP3AS                           00000315
+EEADR                             00000191
+EEADRH                            00000192
+EEADRL                            00000191
+EECON1                            00000195
+EECON2                            00000196
+EEDAT                             00000193
+EEDATH                            00000194
+EEDATL                            00000193
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FERR                              00000002
+FOUT_CTR                          00000011
+FREE                              00000004
+FSR0                              00000004
+FSR0H                             00000005
+FSR0H_SHAD                        00000FE9
+FSR0L                             00000004
+FSR0L_SHAD                        00000FE8
+FSR1                              00000006
+FSR1H                             00000007
+FSR1H_SHAD                        00000FEB
+FSR1L                             00000006
+FSR1L_SHAD                        00000FEA
+FVRCON                            00000117
+FVREN                             00000007
+FVRRDY                            00000006
+GCEN                              00000007
+GIE                               00000007
+GO                                00000001
+GO_NOT_DONE                       00000001
+HFIOFL                            00000003
+HFIOFR                            00000004
+HFIOFS                            00000000
+HUNS_CTR                          0000000B
+INDF0                             00000000
+INDF1                             00000001
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IOCBF                             00000396
+IOCBF0                            00000000
+IOCBF1                            00000001
+IOCBF2                            00000002
+IOCBF3                            00000003
+IOCBF4                            00000004
+IOCBF5                            00000005
+IOCBF6                            00000006
+IOCBF7                            00000007
+IOCBN                             00000395
+IOCBN0                            00000000
+IOCBN1                            00000001
+IOCBN2                            00000002
+IOCBN3                            00000003
+IOCBN4                            00000004
+IOCBN5                            00000005
+IOCBN6                            00000006
+IOCBN7                            00000007
+IOCBP                             00000394
+IOCBP0                            00000000
+IOCBP1                            00000001
+IOCBP2                            00000002
+IOCBP3                            00000003
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+IOCBP4                            00000004
+IOCBP5                            00000005
+IOCBP6                            00000006
+IOCBP7                            00000007
+IOCIE                             00000003
+IOCIF                             00000000
+IRCF0                             00000003
+IRCF1                             00000004
+IRCF2                             00000005
+IRCF3                             00000006
+LATA                              0000010C
+LATA0                             00000000
+LATA1                             00000001
+LATA2                             00000002
+LATA3                             00000003
+LATA4                             00000004
+LATA5                             00000005
+LATA6                             00000006
+LATA7                             00000007
+LATB                              0000010D
+LATB0                             00000000
+LATB1                             00000001
+LATB2                             00000002
+LATB3                             00000003
+LATB4                             00000004
+LATB5                             00000005
+LATB6                             00000006
+LATB7                             00000007
+LATC                              0000010E
+LATC0                             00000000
+LATC1                             00000001
+LATC2                             00000002
+LATC3                             00000003
+LATC4                             00000004
+LATC5                             00000005
+LATC6                             00000006
+LATC7                             00000007
+LATD                              0000010F
+LATD0                             00000000
+LATD1                             00000001
+LATD2                             00000002
+LATD3                             00000003
+LATD4                             00000004
+LATD5                             00000005
+LATD6                             00000006
+LATD7                             00000007
+LATE                              00000110
+LATE0                             00000000
+LATE1                             00000001
+LATE2                             00000002
+LATE3                             00000003
+LATEST_I2C_BYTE                   00000008
+LCDA                              00000005
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+LCDCON                            00000791
+LCDCST                            00000794
+LCDCST0                           00000000
+LCDCST1                           00000001
+LCDCST2                           00000002
+LCDDATA0                          000007A0
+LCDDATA1                          000007A1
+LCDDATA10                         000007AA
+LCDDATA11                         000007AB
+LCDDATA2                          000007A2
+LCDDATA3                          000007A3
+LCDDATA4                          000007A4
+LCDDATA5                          000007A5
+LCDDATA6                          000007A6
+LCDDATA7                          000007A7
+LCDDATA8                          000007A8
+LCDDATA9                          000007A9
+LCDEN                             00000007
+LCDIE                             00000002
+LCDIF                             00000002
+LCDIRE                            00000007
+LCDIRI                            00000005
+LCDIRS                            00000006
+LCDPS                             00000792
+LCDREF                            00000793
+LCDRL                             00000795
+LCDSE0                            00000798
+LCDSE1                            00000799
+LCDSE2                            0000079A
+LFIOFR                            00000001
+LMUX0                             00000000
+LMUX1                             00000001
+LP0                               00000000
+LP1                               00000001
+LP2                               00000002
+LP3                               00000003
+LRLAP0                            00000006
+LRLAP1                            00000007
+LRLAT0                            00000000
+LRLAT1                            00000001
+LRLAT2                            00000002
+LRLBP0                            00000004
+LRLBP1                            00000005
+LWLO                              00000005
+MATH_RESULT                       0000000E
+MATH_X                            0000000C
+MATH_Y                            0000000D
+MC1OUT                            00000000
+MC2OUT                            00000001
+MFIOFR                            00000002
+MS100LEFT                         00000002
+MSLEFT                            00000001
+MSTMR                             00000000
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NEXTHUN                           00000008
+NEXTMS                            00000003
+NEXT_AM1805_VAL                   00000007
+NEXT_CTDWN_VAL                    0000000F
+NEXT_I2C_ADDRESS                  00000005
+NEXT_I2C_DATA                     00000006
+NEXT_MASK                         00000018
+NEXT_UART_CHAR                    00000004
+NEXT_UART_CHAR_BEFORE_ADJ         00000003
+NOT_BOR                           00000000
+NOT_DONE                          00000001
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RI                            00000002
+NOT_RMCLR                         00000003
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_WPUEN                         00000007
+NUMMS                             00000001
+OERR                              00000001
+ONES_CTR                          0000000A
+OPTION_REG                        00000095
+OSCCON                            00000099
+OSCSTAT                           0000009A
+OSCTUNE                           00000098
+OSFIE                             00000007
+OSFIF                             00000007
+OSTS                              00000005
+P                                 00000004
+P1DC0                             00000000
+P1DC1                             00000001
+P1DC2                             00000002
+P1DC3                             00000003
+P1DC4                             00000004
+P1DC5                             00000005
+P1DC6                             00000006
+P1M0                              00000006
+P1M1                              00000007
+P1RSEN                            00000007
+P2BSEL                            00000004
+P2DC0                             00000000
+P2DC1                             00000001
+P2DC2                             00000002
+P2DC3                             00000003
+P2DC4                             00000004
+P2DC5                             00000005
+P2DC6                             00000006
+P2M0                              00000006
+P2M1                              00000007
+P2RSEN                            00000007
+P3DC0                             00000000
+P3DC1                             00000001
+P3DC2                             00000002
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+P3DC3                             00000003
+P3DC4                             00000004
+P3DC5                             00000005
+P3DC6                             00000006
+P3M0                              00000006
+P3M1                              00000007
+P3RSEN                            00000007
+PCIE                              00000006
+PCL                               00000002
+PCLATH                            0000000A
+PCLATH_SHAD                       00000FE7
+PCON                              00000096
+PEIE                              00000006
+PEN                               00000002
+PICALWAYSON_BIT                   00000017
+PIE1                              00000091
+PIE2                              00000092
+PIE3                              00000093
+PIR1                              00000011
+PIR2                              00000012
+PIR3                              00000013
+PLLR                              00000006
+PORTA                             0000000C
+PORTB                             0000000D
+PORTC                             0000000E
+PORTD                             0000000F
+PORTE                             00000010
+PR2                               0000001B
+PR4                               00000416
+PR6                               0000041D
+PRINT_REGISTER                    00000010
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSS1AC0                           00000002
+PSS1AC1                           00000003
+PSS1BD0                           00000000
+PSS1BD1                           00000001
+PSS2AC0                           00000002
+PSS2AC1                           00000003
+PSS2BD0                           00000000
+PSS2BD1                           00000001
+PSS3AC0                           00000002
+PSS3AC1                           00000003
+PSS3BD0                           00000000
+PSS3BD1                           00000001
+PSTR1CON                          00000296
+PSTR2CON                          0000029D
+PSTR3CON                          00000316
+PWM1CON                           00000294
+PWM2CON                           0000029B
+PWM3CON                           00000314
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RA6                               00000006
+RA7                               00000007
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RCEN                              00000003
+RCIDL                             00000006
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             00000199
+RCSTA                             0000019D
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+RE3                               00000003
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+S                                 00000003
+SBCDE                             00000002
+SBOREN                            00000007
+SCIE                              00000005
+SCKP                              00000004
+SCS0                              00000000
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SCS1                              00000001
+SDAHT                             00000003
+SE0                               00000000
+SE1                               00000001
+SE10                              00000002
+SE11                              00000003
+SE12                              00000004
+SE13                              00000005
+SE14                              00000006
+SE15                              00000007
+SE16                              00000000
+SE17                              00000001
+SE18                              00000002
+SE19                              00000003
+SE2                               00000002
+SE20                              00000004
+SE21                              00000005
+SE22                              00000006
+SE23                              00000007
+SE3                               00000003
+SE4                               00000004
+SE5                               00000005
+SE6                               00000006
+SE7                               00000007
+SE8                               00000000
+SE9                               00000001
+SEG0COM0                          00000000
+SEG0COM1                          00000000
+SEG0COM2                          00000000
+SEG0COM3                          00000000
+SEG10COM0                         00000002
+SEG10COM1                         00000002
+SEG10COM2                         00000002
+SEG10COM3                         00000002
+SEG11COM0                         00000003
+SEG11COM1                         00000003
+SEG11COM2                         00000003
+SEG11COM3                         00000003
+SEG12COM0                         00000004
+SEG12COM1                         00000004
+SEG12COM2                         00000004
+SEG12COM3                         00000004
+SEG13COM0                         00000005
+SEG13COM1                         00000005
+SEG13COM2                         00000005
+SEG13COM3                         00000005
+SEG14COM0                         00000006
+SEG14COM1                         00000006
+SEG14COM2                         00000006
+SEG14COM3                         00000006
+SEG15COM0                         00000007
+SEG15COM1                         00000007
+SEG15COM2                         00000007
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SEG15COM3                         00000007
+SEG16COM0                         00000000
+SEG16COM1                         00000000
+SEG16COM2                         00000000
+SEG16COM3                         00000000
+SEG17COM0                         00000001
+SEG17COM1                         00000001
+SEG17COM2                         00000001
+SEG17COM3                         00000001
+SEG18COM0                         00000002
+SEG18COM1                         00000002
+SEG18COM2                         00000002
+SEG18COM3                         00000002
+SEG19COM0                         00000003
+SEG19COM1                         00000003
+SEG19COM2                         00000003
+SEG19COM3                         00000003
+SEG1COM0                          00000001
+SEG1COM1                          00000001
+SEG1COM2                          00000001
+SEG1COM3                          00000001
+SEG20COM0                         00000004
+SEG20COM1                         00000004
+SEG20COM2                         00000004
+SEG20COM3                         00000004
+SEG21COM0                         00000005
+SEG21COM1                         00000005
+SEG21COM2                         00000005
+SEG21COM3                         00000005
+SEG22COM0                         00000006
+SEG22COM1                         00000006
+SEG22COM2                         00000006
+SEG22COM3                         00000006
+SEG23COM0                         00000007
+SEG23COM1                         00000007
+SEG23COM2                         00000007
+SEG23COM3                         00000007
+SEG2COM0                          00000002
+SEG2COM1                          00000002
+SEG2COM2                          00000002
+SEG2COM3                          00000002
+SEG3COM0                          00000003
+SEG3COM1                          00000003
+SEG3COM2                          00000003
+SEG3COM3                          00000003
+SEG4COM0                          00000004
+SEG4COM1                          00000004
+SEG4COM2                          00000004
+SEG4COM3                          00000004
+SEG5COM0                          00000005
+SEG5COM1                          00000005
+SEG5COM2                          00000005
+SEG5COM3                          00000005
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SEG6COM0                          00000006
+SEG6COM1                          00000006
+SEG6COM2                          00000006
+SEG6COM3                          00000006
+SEG7COM0                          00000007
+SEG7COM1                          00000007
+SEG7COM2                          00000007
+SEG7COM3                          00000007
+SEG8COM0                          00000000
+SEG8COM1                          00000000
+SEG8COM2                          00000000
+SEG8COM3                          00000000
+SEG9COM0                          00000001
+SEG9COM1                          00000001
+SEG9COM2                          00000001
+SEG9COM3                          00000001
+SEN                               00000000
+SENDB                             00000003
+SINGLEBLINKLED                    0000001D
+SLEEP_INTERVALS_LEFT              00000014
+SLEEP_INTERVAL_DURATION           00000015
+SLEEP_INTERVAL_FINAL              00000016
+SLEEP_REG                         00000013
+SLPEN                             00000006
+SMP                               00000007
+SP1BRG                            0000019B
+SP1BRGH                           0000019C
+SP1BRGL                           0000019B
+SPBRG                             0000019B
+SPBRGH                            0000019C
+SPBRGL                            0000019B
+SPEN                              00000007
+SPLLEN                            00000007
+SRCLK0                            00000004
+SRCLK1                            00000005
+SRCLK2                            00000006
+SRCON0                            0000011A
+SRCON1                            0000011B
+SREN                              00000005
+SRLEN                             00000007
+SRNQEN                            00000002
+SRNQSEL                           00000003
+SRPR                              00000000
+SRPS                              00000001
+SRQEN                             00000003
+SRRC1E                            00000000
+SRRC2E                            00000001
+SRRCKE                            00000002
+SRRPE                             00000003
+SRSC1E                            00000004
+SRSC2E                            00000005
+SRSCKE                            00000006
+SRSPE                             00000007
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 18
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPADD                            00000212
+SSPBUF                            00000211
+SSPCON                            00000215
+SSPCON1                           00000215
+SSPCON2                           00000216
+SSPCON3                           00000217
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPMSK                            00000213
+SSPOV                             00000006
+SSPSTAT                           00000214
+SSSEL                             00000001
+START                             00000000
+STATUS                            00000003
+STATUS_SHAD                       00000FE4
+STKOVF                            00000007
+STKPTR                            00000FED
+STKUNF                            00000006
+STR1A                             00000000
+STR1B                             00000001
+STR1C                             00000002
+STR1D                             00000003
+STR1SYNC                          00000004
+STR2A                             00000000
+STR2B                             00000001
+STR2C                             00000002
+STR2D                             00000003
+STR2SYNC                          00000004
+STR3A                             00000000
+STR3B                             00000001
+STR3C                             00000002
+STR3D                             00000003
+STR3SYNC                          00000004
+SWDTEN                            00000000
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T0XCS                             00000000
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000018
+T1GCON                            00000019
+T1GGO                             00000003
+T1GGO_NOT_DONE                    00000003
+T1GPOL                            00000006
+T1GSEL                            00000005
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T1GSPM                            00000004
+T1GSS0                            00000000
+T1GSS1                            00000001
+T1GTM                             00000005
+T1GVAL                            00000002
+T1OSCEN                           00000003
+T1OSCR                            00000007
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             0000001C
+T2OUTPS0                          00000003
+T2OUTPS1                          00000004
+T2OUTPS2                          00000005
+T2OUTPS3                          00000006
+T4CKPS0                           00000000
+T4CKPS1                           00000001
+T4CON                             00000417
+T4OUTPS0                          00000003
+T4OUTPS1                          00000004
+T4OUTPS2                          00000005
+T4OUTPS3                          00000006
+T6CKPS0                           00000000
+T6CKPS1                           00000001
+T6CON                             0000041E
+T6OUTPS0                          00000003
+T6OUTPS1                          00000004
+T6OUTPS2                          00000005
+T6OUTPS3                          00000006
+TENS_CTR                          00000009
+TEST_CTR                          00000012
+TMR0                              00000015
+TMR0CS                            00000005
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR0SE                            00000004
+TMR1                              00000016
+TMR1CS0                           00000006
+TMR1CS1                           00000007
+TMR1GE                            00000007
+TMR1GIE                           00000007
+TMR1GIF                           00000007
+TMR1H                             00000017
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             00000016
+TMR1ON                            00000000
+TMR2                              0000001A
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TMR4                              00000415
+TMR4IE                            00000001
+TMR4IF                            00000001
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR4ON                            00000002
+TMR6                              0000041C
+TMR6IE                            00000003
+TMR6IF                            00000003
+TMR6ON                            00000002
+TOSH                              00000FEF
+TOSL                              00000FEE
+TRISA                             0000008C
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISA6                            00000006
+TRISA7                            00000007
+TRISB                             0000008D
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             0000008E
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             0000008F
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000090
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRISE3                            00000003
+TRMT                              00000001
+TSEN                              00000005
+TSRNG                             00000004
+TUN0                              00000000
+TUN1                              00000001
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TUN2                              00000002
+TUN3                              00000003
+TUN4                              00000004
+TUN5                              00000005
+TX9                               00000006
+TX9D                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             0000019A
+TXSTA                             0000019E
+UA                                00000001
+VLCD1PE                           00000001
+VLCD2PE                           00000002
+VLCD3PE                           00000003
+W                                 00000000
+WA                                00000004
+WCOL                              00000007
+WDTCON                            00000097
+WDTPS0                            00000001
+WDTPS1                            00000002
+WDTPS2                            00000003
+WDTPS3                            00000004
+WDTPS4                            00000005
+WERR                              00000005
+WFT                               00000007
+WPUB                              0000020D
+WPUB0                             00000000
+WPUB1                             00000001
+WPUB2                             00000002
+WPUB3                             00000003
+WPUB4                             00000004
+WPUB5                             00000005
+WPUB6                             00000006
+WPUB7                             00000007
+WPUE                              00000210
+WPUE3                             00000003
+WR                                00000001
+WREG                              00000009
+WREG_SHAD                         00000FE5
+WREN                              00000002
+WRERR                             00000003
+WUE                               00000001
+Z                                 00000002
+Z_SHAD                            00000002
+_BOREN_NSLEEP                     00003DFF
+_BOREN_OFF                        000039FF
+_BOREN_ON                         00003FFF
+_BOREN_SBODEN                     00003BFF
+_BORV_19                          00003FFF
+_BORV_25                          00003BFF
+_BORV_HI                          00003BFF
+_BORV_LO                          00003FFF
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_CLKOUTEN_OFF                     00003FFF
+_CLKOUTEN_ON                      000037FF
+_CONFIG1                          00008007
+_CONFIG2                          00008008
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_OFF                           00003FFF
+_CP_ON                            00003F7F
+_DEVID1                           00008006
+_FCMEN_OFF                        00001FFF
+_FCMEN_ON                         00003FFF
+_FOSC_ECH                         00003FFF
+_FOSC_ECL                         00003FFD
+_FOSC_ECM                         00003FFE
+_FOSC_EXTRC                       00003FFB
+_FOSC_HS                          00003FFA
+_FOSC_INTOSC                      00003FFC
+_FOSC_LP                          00003FF8
+_FOSC_XT                          00003FF9
+_IDLOC0                           00008000
+_IDLOC1                           00008001
+_IDLOC2                           00008002
+_IDLOC3                           00008003
+_IESO_OFF                         00002FFF
+_IESO_ON                          00003FFF
+_LVP_OFF                          00001FFF
+_LVP_ON                           00003FFF
+_MAIN_PROG_0001                   00000001
+_MCLRE_OFF                        00003FBF
+_MCLRE_ON                         00003FFF
+_PLLEN_OFF                        00003EFF
+_PLLEN_ON                         00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FDF
+_STVREN_OFF                       00003DFF
+_STVREN_ON                        00003FFF
+_WDTE_NSLEEP                      00003FF7
+_WDTE_OFF                         00003FE7
+_WDTE_ON                          00003FFF
+_WDTE_SWDTEN                      00003FEF
+_WRT_ALL                          00003FFC
+_WRT_BOOT                         00003FFE
+_WRT_HALF                         00003FFD
+_WRT_OFF                          00003FFF
+__16LF1937                        00000001
+__CODE_END                        00001FFF
+__CODE_START                      00000000
+__COMMON_RAM_END                  0000007F
+__COMMON_RAM_START                00000070
+__EEPROM_END                      0000F0FF
+__EEPROM_START                    0000F000
+__LINEAR_RAM_END                  000021EF
+__LINEAR_RAM_START                00002000
+gpasm-1.4.0 #1107 (May 18 2015) /home/matt/aq   2-14-2016  20:17:41         PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+__VECTOR_INT                      00000004
+__VECTOR_RESET                    00000000
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

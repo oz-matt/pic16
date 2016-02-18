@@ -1,0 +1,212 @@
+gplink-1.4.0 #1107 (May 18 2015)
+Map File - Created 2-17-2016  17:14:32
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                 RES_VECT       code   0x000000    program   0x000002
+                 I2C_FXNS       code   0x000001    program   0x00009e
+              EEPROM_FXNS       code   0x000050    program   0x000086
+               DELAY_FXNS       code   0x000093    program   0x000050
+                  IO_FXNS       code   0x0000bb    program   0x00004e
+               ICHEX_FXNS       code   0x0000e2    program   0x00002c
+                MAIN_PROG       code   0x0000f8    program   0x00001a
+                 WDT_FXNS       code   0x000105    program   0x000010
+                BREX_FXNS       code   0x00010d    program   0x000002
+.config_8007_/HOME/MATT/AQUA/PIC16LF1938/OUT/AQUAMAIN.O       code   0x008007    program   0x000002
+.config_8008_/HOME/MATT/AQUA/PIC16LF1938/OUT/AQUAMAIN.O       code   0x008008    program   0x000002
+               AQUA_UDATA      udata   0x000020       data   0x000021
+
+
+
+                              Program Memory Usage
+                               Start         End
+                           ---------   ---------
+                            0x000093    0x0000ba
+                            0x0000bb    0x0000e1
+                            0x000105    0x00010c
+                            0x000001    0x00004f
+                            0x0000e2    0x0000f7
+                            0x000050    0x000092
+                            0x00010d    0x00010d
+                            0x000000    0x000000
+                            0x0000f8    0x000104
+                            0x008007    0x008007
+                            0x008008    0x008008
+                            272 program addresses used
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File
+                ---------  ---------  ---------  --------- ---------
+                   CT_DAY   0x00003e       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    CT_HR   0x00003d       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   CT_MIN   0x00003c       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    CT_MO   0x00003f       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   CT_SEC   0x00003b       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                  CT_WORK   0x000039       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+             CT_WORK_TENS   0x00003a       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    CT_YR   0x000040       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+               DELAY100MS   0x00009b    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+                  DELAYMS   0x000093    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+           DOUBLEBLINKLED   0x0000a2    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+         FIRST_PWRUP_CODE   0x00010d    program     static /home/matt/aqua/pic16lf1938/sys/brex.inc
+                 FOUT_CTR   0x000031       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                 HUNS_CTR   0x00002b       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                  I2CINIT   0x000001    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+I2C_EEPROM_DEC_NUM_INTERVALS   0x000089    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+I2C_EEPROM_READ_SLEEP_VARS   0x000067    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+I2C_EEPROM_WRITE_DATA_TO_ADDRESS   0x00005e    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+             I2C_GEN_READ   0x000022    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+        I2C_GET_READ_DATA   0x000027    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+             I2C_SEND_ACK   0x000044    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+     I2C_SEND_EEPROM_READ   0x000050    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+    I2C_SEND_EEPROM_WRITE   0x000057    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+            I2C_SEND_NACK   0x00004a    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           I2C_SEND_START   0x00000e    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+            I2C_SEND_STOP   0x000013    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+   I2C_TEST_GET_READ_DATA   0x00002c    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           I2C_TEST_WRITE   0x000018    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+         I2C_WAIT_FOR_ACK   0x00001f    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+   I2C_WRITE_NEXT_ADDRESS   0x00003c    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+      I2C_WRITE_NEXT_DATA   0x000034    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+      IS_THIS_FIRST_PWRUP   0x0000e2    program     static /home/matt/aqua/pic16lf1938/sys/ichex.inc
+          LATEST_I2C_BYTE   0x000028       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+              MATH_RESULT   0x00002e       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   MATH_X   0x00002c       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   MATH_Y   0x00002d       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                MS100LEFT   0x000022       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   MSLEFT   0x000021       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    MSTMR   0x000020       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                  NEXTHUN   0x00009b    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+                   NEXTMS   0x000096    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+          NEXT_AM1805_VAL   0x000027       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           NEXT_CTDWN_VAL   0x00002f       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+         NEXT_I2C_ADDRESS   0x000025       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+            NEXT_I2C_DATA   0x000026       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                NEXT_MASK   0x000038       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           NEXT_UART_CHAR   0x000024       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+NEXT_UART_CHAR_BEFORE_ADJ   0x000023       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    NUMMS   0x000094    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+                 ONES_CTR   0x00002a       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+          PICALWAYSON_BIT   0x000037       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           PRINT_REGISTER   0x000030       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+               PullPSWLow   0x0000da    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+              RELEASE_PSW   0x0000de    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+           SINGLEBLINKLED   0x0000b0    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+     SLEEP_INTERVALS_LEFT   0x000034       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+  SLEEP_INTERVAL_DURATION   0x000035       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+     SLEEP_INTERVAL_FINAL   0x000036       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                SLEEP_REG   0x000033       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    START   0x0000f8    program     static /home/matt/aqua/pic16lf1938/src/aquamain.asm
+              SetupConfig   0x0000bb    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+             SetupFOUTCtr   0x0000ca    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+                SetupFVRC   0x0000ce    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+                  SetupIO   0x0000c0    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+              SetupIntOsc   0x0000bc    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+                 TENS_CTR   0x000029       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                 TEST_CTR   0x000032       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   WDTest   0x000109    program     static /home/matt/aqua/pic16lf1938/lib/wdt.inc
+       WatchdogPeriodInit   0x000105    program     static /home/matt/aqua/pic16lf1938/lib/wdt.inc
+        _EEPROM_FXNS_0005   0x000055    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+        _EEPROM_FXNS_000C   0x00005c    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+           _I2C_FXNS_0010   0x000011    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_0015   0x000016    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_001C   0x00001d    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_001F   0x000020    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_0024   0x000025    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_0031   0x000032    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_0039   0x00003a    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_0041   0x000042    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+            _IO_FXNS_001D   0x0000d8    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+          _MAIN_PROG_000C   0x000104    program     static /home/matt/aqua/pic16lf1938/src/aquamain.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File
+                ---------  ---------  ---------  --------- ---------
+                  I2CINIT   0x000001    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           I2C_SEND_START   0x00000e    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_0010   0x000011    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+            I2C_SEND_STOP   0x000013    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_0015   0x000016    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           I2C_TEST_WRITE   0x000018    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+           _I2C_FXNS_001C   0x00001d    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+         I2C_WAIT_FOR_ACK   0x00001f    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+                    MSTMR   0x000020       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           _I2C_FXNS_001F   0x000020    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+                   MSLEFT   0x000021       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+             I2C_GEN_READ   0x000022    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+                MS100LEFT   0x000022       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+NEXT_UART_CHAR_BEFORE_ADJ   0x000023       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           NEXT_UART_CHAR   0x000024       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+         NEXT_I2C_ADDRESS   0x000025       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           _I2C_FXNS_0024   0x000025    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+            NEXT_I2C_DATA   0x000026       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+        I2C_GET_READ_DATA   0x000027    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+          NEXT_AM1805_VAL   0x000027       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+          LATEST_I2C_BYTE   0x000028       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                 TENS_CTR   0x000029       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                 ONES_CTR   0x00002a       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                 HUNS_CTR   0x00002b       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+   I2C_TEST_GET_READ_DATA   0x00002c    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+                   MATH_X   0x00002c       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   MATH_Y   0x00002d       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+              MATH_RESULT   0x00002e       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           NEXT_CTDWN_VAL   0x00002f       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           PRINT_REGISTER   0x000030       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                 FOUT_CTR   0x000031       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                 TEST_CTR   0x000032       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           _I2C_FXNS_0031   0x000032    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+                SLEEP_REG   0x000033       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+      I2C_WRITE_NEXT_DATA   0x000034    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+     SLEEP_INTERVALS_LEFT   0x000034       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+  SLEEP_INTERVAL_DURATION   0x000035       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+     SLEEP_INTERVAL_FINAL   0x000036       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+          PICALWAYSON_BIT   0x000037       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                NEXT_MASK   0x000038       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                  CT_WORK   0x000039       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+             CT_WORK_TENS   0x00003a       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           _I2C_FXNS_0039   0x00003a    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+                   CT_SEC   0x00003b       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   CT_MIN   0x00003c       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+   I2C_WRITE_NEXT_ADDRESS   0x00003c    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+                    CT_HR   0x00003d       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                   CT_DAY   0x00003e       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    CT_MO   0x00003f       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+                    CT_YR   0x000040       data     static /home/matt/aqua/pic16lf1938/lib/udata.inc
+           _I2C_FXNS_0041   0x000042    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+             I2C_SEND_ACK   0x000044    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+            I2C_SEND_NACK   0x00004a    program     static /home/matt/aqua/pic16lf1938/lib/i2c.inc
+     I2C_SEND_EEPROM_READ   0x000050    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+        _EEPROM_FXNS_0005   0x000055    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+    I2C_SEND_EEPROM_WRITE   0x000057    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+        _EEPROM_FXNS_000C   0x00005c    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+I2C_EEPROM_WRITE_DATA_TO_ADDRESS   0x00005e    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+I2C_EEPROM_READ_SLEEP_VARS   0x000067    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+I2C_EEPROM_DEC_NUM_INTERVALS   0x000089    program     static /home/matt/aqua/pic16lf1938/lib/eeprom.inc
+                  DELAYMS   0x000093    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+                    NUMMS   0x000094    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+                   NEXTMS   0x000096    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+               DELAY100MS   0x00009b    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+                  NEXTHUN   0x00009b    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+           DOUBLEBLINKLED   0x0000a2    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+           SINGLEBLINKLED   0x0000b0    program     static /home/matt/aqua/pic16lf1938/lib/delay.inc
+              SetupConfig   0x0000bb    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+              SetupIntOsc   0x0000bc    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+                  SetupIO   0x0000c0    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+             SetupFOUTCtr   0x0000ca    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+                SetupFVRC   0x0000ce    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+            _IO_FXNS_001D   0x0000d8    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+               PullPSWLow   0x0000da    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+              RELEASE_PSW   0x0000de    program     static /home/matt/aqua/pic16lf1938/lib/io.inc
+      IS_THIS_FIRST_PWRUP   0x0000e2    program     static /home/matt/aqua/pic16lf1938/sys/ichex.inc
+                    START   0x0000f8    program     static /home/matt/aqua/pic16lf1938/src/aquamain.asm
+          _MAIN_PROG_000C   0x000104    program     static /home/matt/aqua/pic16lf1938/src/aquamain.asm
+       WatchdogPeriodInit   0x000105    program     static /home/matt/aqua/pic16lf1938/lib/wdt.inc
+                   WDTest   0x000109    program     static /home/matt/aqua/pic16lf1938/lib/wdt.inc
+         FIRST_PWRUP_CODE   0x00010d    program     static /home/matt/aqua/pic16lf1938/sys/brex.inc
+
+
