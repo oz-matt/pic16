@@ -16,3 +16,10 @@ PIC_INIT     macro
             ; Datasheet says to run this before enabling timer
 
     endm
+
+DELAY_1_SEC	        macro
+    BANKSEL	        MS100LEFT
+    movlw           H'0A'
+    movwf           MS100LEFT
+    call	        DELAY100MS
+    endm

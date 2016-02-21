@@ -3,6 +3,8 @@ AM1805_FXNS         CODE
 AM1805_WRITE_ADDRESS    equ	H'D2'
 AM1805_READ_ADDRESS     equ	H'D3'
 
+; TODO : Write a 'Write Pgm Alarm function'
+
 Delay50ms           MACRO
     BANKSEL         MSLEFT
     movlw           .50
@@ -135,11 +137,11 @@ AM1805_START_CTDN_TMR
 
     return
 
-AM1805_INITIATE_SLEEP
+AM1805_INITIATE_CTDN_SLEEP
     BANKSEL         NEXT_I2C_ADDRESS
     movlw	        H'12'			; Interrupt Mask register in AM1805
     movwf	        NEXT_I2C_ADDRESS
-    movlw	        b'01101100'		; Enable timer, alarm and exti interrupts
+    movlw	        b'01101001'		; Enable timer and exti interrupts
     BANKSEL         NEXT_I2C_DATA
     movwf	        NEXT_I2C_DATA
     call            I2C_AM1805_WRITE_DATA_TO_ADDRESS    ; Writes 0x2D to 0x18 @ AM1805
@@ -169,7 +171,7 @@ AM1805_INITIATE_SLEEP
     BANKSEL         NEXT_I2C_ADDRESS
     movlw	        H'17'			; Sleep Control register in AM1805
     movwf	        NEXT_I2C_ADDRESS
-    movlw	        b'10000000'		; Enter Sleep mode, rising edge of EXTI triggers interrupt
+    movlw	        b'10000000'		; Enter Sleep mode, falling edge of EXTI triggers interrupt
     BANKSEL         NEXT_I2C_DATA
     movwf	        NEXT_I2C_DATA
     call            I2C_AM1805_WRITE_DATA_TO_ADDRESS    ; Writes 0x80 to 0x17 @ AM1805
@@ -240,6 +242,32 @@ AM1805_PRINT_REGISTER
     call            EUSART_TRANSMIT_CHAR_ADJ
 
     return
+
+AM1805_ARE_WE_ASLEEP
+    call	        I2C_SEND_START
+    call	        I2C_SEND_AM1805_WRITE
+    call	        I2C_WAIT_FOR_ACK
+
+    movlw           H'17'
+    BANKSEL	        NEXT_I2C_ADDRESS
+    movwf	        NEXT_I2C_ADDRESS
+
+    call	        I2C_WRITE_NEXT_ADDRESS
+    call	        I2C_WAIT_FOR_ACK
+    call	        I2C_SEND_STOP
+
+    nop
+
+    call	        I2C_SEND_START
+    call	        I2C_SEND_AM1805_READ
+    call	        I2C_WAIT_FOR_ACK
+    call	        I2C_GEN_READ
+    call	        I2C_GET_READ_DATA
+
+    BANKSEL         LATEST_I2C_BYTE
+    btfss           LATEST_I2C_BYTE,7
+    retlw           .0
+    retlw           .1
 
 AM1805_UPDATE_CT			    ; must setup NEXT_AM1805_ADDRESS with address to read from
 

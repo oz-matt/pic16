@@ -29,6 +29,27 @@ IS_THIS_FIRST_PWRUP
     subwf               LATEST_I2C_BYTE,f
     tstf				LATEST_I2C_BYTE
 
+    BANKSEL             STATUS
     btfss				STATUS,Z
     retlw				.1
     retlw				.0
+
+IS_USBON_HIGH
+
+    ; This function returns a 1 in w if a USB cable is plugged in.
+
+    BANKSEL             PORTC
+    btfss               PORTC,0
+    retlw               .0
+    retlw               .1
+
+IS_TC_HIGH
+
+    ; This function returns a 0 in w if TC is low (Main Switch was
+    ; just toggled on -- we need a full refresh of vars and SD card
+    ; params)
+
+    BANKSEL             PORTB
+    btfss               PORTB,4
+    retlw               .0
+    retlw               .1

@@ -35,6 +35,82 @@ I2C_EEPROM_WRITE_DATA_TO_ADDRESS
     call				I2C_SEND_STOP
     return
 
+EEPROM_WRITE_DEFAULTS
+        ;Write 0 to 0x00 -- num sleep intervals remaining = 0
+        ;Write 255 to 0x01 -- set 'standard' deep sleep interval
+        ;Write 0 to 0x02 -- length of final deep sleep interval = 0
+    BANKSEL             NEXT_I2C_ADDRESS
+    movlw               .0
+    movwf               NEXT_I2C_ADDRESS
+    BANKSEL             NEXT_I2C_DATA
+    movlw               .0
+    movwf               NEXT_I2C_DATA
+
+    call				I2C_SEND_START
+    call				I2C_SEND_EEPROM_WRITE
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_ADDRESS
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x00
+    call				I2C_WAIT_FOR_ACK
+
+    BANKSEL             NEXT_I2C_DATA
+    movlw               H'FF'
+    movwf               NEXT_I2C_DATA
+    call				I2C_WRITE_NEXT_DATA         ; 0x01
+    call				I2C_WAIT_FOR_ACK
+
+    BANKSEL             NEXT_I2C_DATA
+    movlw               .0
+    movwf               NEXT_I2C_DATA
+    call				I2C_WRITE_NEXT_DATA         ; 0x02
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_SEND_STOP
+
+    ; ------------------------------------------------------------
+    ; Init values relating to GMT start mode to zero (0x40 - 0x46)
+
+    BANKSEL             NEXT_I2C_ADDRESS
+    movlw               H'40'
+    movwf               NEXT_I2C_ADDRESS
+    BANKSEL             NEXT_I2C_DATA
+    movlw               .0
+    movwf               NEXT_I2C_DATA
+
+    call				I2C_SEND_START
+    call				I2C_SEND_EEPROM_WRITE
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_ADDRESS
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x40
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x41
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x42
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x43
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x44
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x45
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_WRITE_NEXT_DATA         ; 0x46
+    call				I2C_WAIT_FOR_ACK
+    call				I2C_SEND_STOP
+
+    ; ------------------------------------------------------------
+    ; Write 1 to 0x0F -- Every subsequent powerup is not the first powerup
+
+    BANKSEL             NEXT_I2C_ADDRESS
+    movlw               H'0F'
+    movwf               NEXT_I2C_ADDRESS
+    BANKSEL             NEXT_I2C_DATA
+    movlw               .1
+    movwf               NEXT_I2C_DATA
+    call                I2C_EEPROM_WRITE_DATA_TO_ADDRESS
+
+    return
+
 I2C_EEPROM_READ_SLEEP_VARS
     call				I2C_SEND_START
     call				I2C_SEND_EEPROM_WRITE

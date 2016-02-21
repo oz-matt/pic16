@@ -63,14 +63,38 @@ SetupFVRC
 
 	return
 
-PullPSWLow
-	BANKSEL				PORTA
-	bsf					PORTA,2
+ENSUREPSW_LOW
+	BANKSEL				PORTB
+	bsf					PORTB,3
 	nop
 	return
 
 RELEASE_PSW
+	BANKSEL				PORTB
+	bcf					PORTB,3
+	nop
+	return
+
+PULL_EEPROM_MASTER_SEL_HIGH
 	BANKSEL				PORTA
-	bcf					PORTA,2
+	bsf					PORTA,5
+	nop
+	return
+
+PULL_EEPROM_MASTER_SEL_LOW
+	BANKSEL				PORTA
+	bcf					PORTA,5
+	nop
+	return
+
+ENABLE_NRF52
+	BANKSEL				PORTA
+	bsf					PORTA,3
+	nop
+	return
+
+DISABLE_NRF52
+	BANKSEL				PORTA
+	bcf					PORTA,3
 	nop
 	return
